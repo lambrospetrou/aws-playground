@@ -5,7 +5,7 @@ bundle: prepare_output_dir service1 service2 workerservice
 	mv web-service-2/web-service-2 build/bin/
 	mv worker-service/worker-service build/bin/
 	cp build-tools/hello.sh build/bin/
-	cp Buildfile Procfile build/
+	cp -r .ebextensions Buildfile Procfile build/
 	cd build; zip -r bundle.zip .
 
 prepare_output_dir:
