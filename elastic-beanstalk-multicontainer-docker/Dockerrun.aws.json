@@ -1,0 +1,100 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "volumes": [
+    {
+      "name": "web1",
+      "host": {
+        "sourcePath": "/var/app/current/web-service-1"
+      }
+    },
+    {
+      "name": "web2",
+      "host": {
+        "sourcePath": "/var/app/current/web-service-2"
+      }
+    },
+    {
+      "name": "nginx-proxy-conf",
+      "host": {
+        "sourcePath": "/var/app/current/proxy/conf.d"
+      }
+    }
+  ],
+  "containerDefinitions": [
+    {
+      "name": "web1",
+      "image": "golang:1.10",
+      "essential": true,
+      "memory": 128,
+      "mountPoints": [
+        {
+          "sourceVolume": "web1",
+          "containerPath": "/var/app"
+        }
+      ],
+      "portMappings": [
+        {
+          "hostPort": 5000,
+          "containerPort": 5000
+        }
+      ],
+      "environment": [
+        {
+          "name": "PORT",
+          "value": "5000"
+        }
+      ],
+      "command": ["/var/app/web-service-1"]
+    },
+    {
+      "name": "web2",
+      "image": "golang:1.10",
+      "essential": true,
+      "memory": 128,
+      "mountPoints": [
+        {
+          "sourceVolume": "web2",
+          "containerPath": "/var/app"
+        }
+      ],
+      "portMappings": [
+        {
+          "hostPort": 5100,
+          "containerPort": 5100
+        }
+      ],
+      "environment": [
+        {
+          "name": "PORT",
+          "value": "5100"
+        }
+      ],
+      "command": ["/var/app/web-service-2"]
+    },
+    {
+      "name": "nginx-proxy",
+      "image": "nginx",
+      "essential": true,
+      "memory": 128,
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "containerPort": 80
+        }
+      ],
+      "links": [
+        "web1", "web2"
+      ],
+      "mountPoints": [
+        {
+          "sourceVolume": "nginx-proxy-conf",
+          "containerPath": "/etc/nginx/conf.d"
+        },
+        {
+          "sourceVolume": "awseb-logs-nginx-proxy",
+          "containerPath": "/var/log/nginx"
+        }
+      ]
+    }
+  ]
+}
