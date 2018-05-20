@@ -1,0 +1,19 @@
+branch-defaults:
+  default:
+    environment: MultipleGoServices-dev
+global:
+  application_name: MultipleGoServices
+  branch: master
+  default_ec2_keyname: lp-personal-dev-server
+  default_platform: Multi-container Docker 17.12.1-ce (Generic)
+  default_region: eu-west-1
+  include_git_submodules: true
+  instance_profile: null
+  platform_name: null
+  platform_version: null
+  profile: null
+  repository: null
+  sc: git
+  workspace_type: Application
+deploy:
+  artifact: build/bundle.zip
