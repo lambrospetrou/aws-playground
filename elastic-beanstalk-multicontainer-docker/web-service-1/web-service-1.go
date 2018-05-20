@@ -15,7 +15,7 @@ func main() {
 	}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Service 1 Path, %q", html.EscapeString(r.URL.Path))
+		fmt.Fprintf(w, "Service 1 request path, %q", html.EscapeString(r.URL.Path))
 	})
 
 	log.Println("Web Service 1 starts listening at :" + port)

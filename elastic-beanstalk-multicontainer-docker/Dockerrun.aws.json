@@ -25,7 +25,7 @@
       "name": "web1",
       "image": "golang:1.10",
       "essential": true,
-      "memory": 128,
+      "memoryReservation": 128,
       "mountPoints": [
         {
           "sourceVolume": "web1",
@@ -50,7 +50,7 @@
       "name": "web2",
       "image": "golang:1.10",
       "essential": true,
-      "memory": 128,
+      "memoryReservation": 128,
       "mountPoints": [
         {
           "sourceVolume": "web2",
@@ -75,7 +75,7 @@
       "name": "nginx-proxy",
       "image": "nginx",
       "essential": true,
-      "memory": 128,
+      "memoryReservation": 128,
       "portMappings": [
         {
           "hostPort": 80,

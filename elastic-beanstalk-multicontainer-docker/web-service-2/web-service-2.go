@@ -15,10 +15,10 @@ func main() {
 	}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Service 2 Path, %q", html.EscapeString(r.URL.Path))
+		fmt.Fprintf(w, "Service 2 request path, %q", html.EscapeString(r.URL.Path))
 	})
 
-	log.Println("Web Service 2 starts listening at :" + port)
+	log.Println("Web Service 2 starts listening at:" + port)
 
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }

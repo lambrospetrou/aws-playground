@@ -3,7 +3,7 @@
 bundle: prepare_output_dir service1 service2
 	mv web-service-1/web-service-1 build/web-service-1/
 	mv web-service-2/web-service-2 build/web-service-2/
-	cp -r proxy Dockerrun.aws.json build/
+	cp -r proxy Dockerrun.aws.json .ebextensions build/
 	cd build; zip -r bundle.zip .
 
 prepare_output_dir:
