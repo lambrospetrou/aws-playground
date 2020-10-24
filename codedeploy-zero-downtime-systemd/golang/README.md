@@ -20,3 +20,11 @@ In a proper production deployment we should have separate deployment folders to 
 To prepare the bundle `.zip` file to upload you just need to run `make`. You need Docker and the Rust toolchain installed.
 
 Then follow the instructions at https://docs.aws.amazon.com/codedeploy/latest/userguide/applications-create-in-place.html to create a CodeDeploy application and deploy the created bundle.
+
+## Test
+
+In order to test that there is no downtime I use the [`ab`](https://httpd.apache.org/docs/2.4/programs/ab.html) network tool to send a continuous stream of requests to the EC2 instance. While the requests are flowing, I trigger a deployment and make sure there are not failed requests (it will throw with `connection reset` or `connection refused` if the server goes offline).
+
+```
+ab -c 10 -n 10000 http://<public-ip-of-your-instance>/lambros
+```
