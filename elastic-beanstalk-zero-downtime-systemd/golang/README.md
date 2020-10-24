@@ -4,6 +4,8 @@
 
 The systemd socket activation works perfectly, but after doing it I realized that it's hopeless since the front-end Nginx proxy gets stopped and then started again during the deployment, which makes the whole point void.
 
+The whole downtime by default is roughly 1 second, just restarting nginx and the server basically, so works fine for most use-cases.
+
 Anyway, good to keep for reference.
 
 ## Overview
