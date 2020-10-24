@@ -1,0 +1,4 @@
+[Service]
+Type=simple
+Environment="STARTED_FROM_SYSTEMD=1"
+ExecStart=/home/ec2-user/bin/application
