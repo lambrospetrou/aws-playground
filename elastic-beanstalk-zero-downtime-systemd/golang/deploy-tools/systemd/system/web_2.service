@@ -1,0 +1,5 @@
+[Service]
+Type=simple
+Environment="PORT=5000"
+Environment="STARTED_FROM_SYSTEMD=1"
+ExecStart=/var/app/current/bin/application

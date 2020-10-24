@@ -2,7 +2,11 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+	"os"
+
+	"github.com/coreos/go-systemd/v22/activation"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -14,6 +18,28 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	port := os.Getenv("PORT")
+	startedFromSystemd := os.Getenv("STARTED_FROM_SYSTEMD") == "1"
+
+	listeners, err := activation.Listeners()
+	if err != nil && startedFromSystemd {
+		panic(err)
+	}
+
 	http.HandleFunc("/", handler)
-	http.ListenAndServe(":5000", nil)
+
+	if startedFromSystemd {
+		if len(listeners) != 1 {
+			panic("Unexpected number of socket activation fds")
+		}
+		log.Println("Starting the server listening to the systemd file descriptor...", listeners[0])
+		http.Serve(listeners[0], nil)
+	} else {
+		if port == "5000" {
+			// 5000 is reserved for the main service responding to web requests!
+			port = "5001"
+		}
+		log.Println("Starting the server listening to port:", port)
+		http.ListenAndServe(":"+port, nil)
+	}
 }
