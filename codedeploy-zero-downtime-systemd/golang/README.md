@@ -6,6 +6,8 @@ AWS CodeDeploy allows us to use anything we want during deployment on standard E
 
 This sample project contains everything you need to deploy a sample application that uses `systemd` socket activation to achieve zero downtime during deployments. The only CodeDeploy specific file is the `appspec.yml` which specifies what files to copy, and what commands to run at each lifecycle step, pretty straightforward.
 
+The key scripts that call `systemd` to start and stop the application properly are `start-application.sh` and `stop-application.sh`, under the `deploy-tools/codedeploy-hooks/` directory.
+
 This sample does not necessarily follow best-practices in terms of deployment assets since each deployment directly overrides previous assets.
 In a proper production deployment we should have separate deployment folders to allow robust rollbacks. Also, graceful server shutdown is something left as an exercise to the reader.
 
