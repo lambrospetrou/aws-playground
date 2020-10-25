@@ -13,6 +13,7 @@ In a proper production deployment we should have separate deployment folders to 
 
 **References**
 - https://docs.aws.amazon.com/codedeploy/latest/userguide/application-revisions-appspec-file.html
+- https://docs.aws.amazon.com/codedeploy/latest/userguide/reference-appspec-file-structure-hooks.html
 - http://0pointer.de/blog/projects/socket-activation.html
 - https://vincent.bernat.ch/en/blog/2018-systemd-golang-socket-activation
 - https://github.com/coreos/go-systemd/blob/master/examples/activation/httpserver/httpserver.go

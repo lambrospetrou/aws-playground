@@ -86,8 +86,6 @@ hooks:
   ApplicationStop:
     - location: deploy-tools/codedeploy-hooks/application-stops.sh
       timeout: 1
-    - location: deploy-tools/codedeploy-hooks/stop-application.sh
-      timeout: 5
 # During the BeforeInstall deployment lifecycle event, run the commands 
 #   in the script specified in "location".
   BeforeInstall:
@@ -98,6 +96,10 @@ hooks:
   AfterInstall:
     - location: deploy-tools/codedeploy-hooks/after-install.sh     
       timeout: 1
+    # We stop the application here in order to use the new `bin/application` 
+    # binary when it starts taking traffic again.
+    - location: deploy-tools/codedeploy-hooks/stop-application.sh
+      timeout: 5
 # During the ApplicationStart deployment lifecycle event, run the commands 
 #   in the script specified in "location".
   ApplicationStart:
