@@ -1,0 +1,18 @@
+{
+  "name": "aws-sam-cicd",
+  "version": "1.0.0",
+  "scripts": {
+    "clean": "rm -rf build/",
+    "prebuild": "mkdir -p build/",
+    "build": "esbuild src/*.mjs --bundle --minify --platform=node --target=node14 --format=esm --out-extension:.js=.mjs --outdir=build/functions/",
+    "bundle": "cd build/functions/ && zip ../functions.zip *.mjs",
+    "prerelease": "npm run clean",
+    "release": "npm run build && npm run bundle"
+  },
+  "keywords": ["aws sam", "aws cdk"],
+  "author": "Lambros Petrou",
+  "license": "ISC",
+  "devDependencies": {
+    "esbuild": "^0.14.11"
+  }
+}
