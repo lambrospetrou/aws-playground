@@ -5,9 +5,10 @@
     "clean": "rm -rf build/",
     "prebuild": "mkdir -p build/",
     "build": "esbuild src/*.mjs --bundle --minify --platform=node --target=node14 --format=esm --out-extension:.js=.mjs --outdir=build/functions/",
-    "bundle": "cd build/functions/ && zip ../functions.zip *.mjs",
+    "bundle:functions": "cd build/functions/ && zip ../functions.zip *.mjs",
+    "bundle:iac": "cp -r aws-iac build/",
     "prerelease": "npm run clean",
-    "release": "npm run build && npm run bundle"
+    "release": "npm run build && npm run bundle:functions && npm run bundle:iac"
   },
   "keywords": ["aws sam", "aws cdk"],
   "author": "Lambros Petrou",

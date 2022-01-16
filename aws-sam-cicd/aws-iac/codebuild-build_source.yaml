@@ -1,0 +1,17 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 14
+    commands:
+      # Changing directory here will persist!
+      - cd aws-sam-cicd
+      - npm ci
+  build:
+    commands:
+      - npm run release
+artifacts:
+  base-directory: aws-sam-cicd/build/
+  files:
+    - '**/*'

@@ -13,7 +13,7 @@ Resources:
   HelloWorldFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ../build/functions.zip
+      CodeUri: ../functions.zip
       Handler: fn-apimain.handler
       Runtime: nodejs14.x
       Events:

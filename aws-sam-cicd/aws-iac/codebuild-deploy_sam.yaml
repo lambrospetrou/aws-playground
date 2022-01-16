@@ -1,0 +1,7 @@
+version: 0.2
+phases:
+  build:
+    commands:
+      - cd aws-sam-cicd
+      # - sam build -t aws-iac/sam_template.yaml
+      - sam deploy -t aws-iac/sam_template.yaml --stack-name $SOMETHINGDYNAMIC... --no-confirm-changeset --no-fail-on-empty-changeset --capabilities CAPABILITY_IAM,CAPABILITY_NAMED_IAM,CAPABILITY_AUTO_EXPAND

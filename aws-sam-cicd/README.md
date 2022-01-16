@@ -9,13 +9,13 @@ npm run release
 Invoke the function locally:
 
 ```
-sam local invoke HelloWorldFunction --no-event -t aws-iac/sam_template.yaml
+sam local invoke HelloWorldFunction --no-event -t build/aws-iac/sam_template.yaml
 ```
 
 Start the API locally:
 
 ```
-sam local start-api -t aws-iac/sam_template.yaml
+sam local start-api -t build/aws-iac/sam_template.yaml
 ```
 
 ## References
