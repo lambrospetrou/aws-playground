@@ -4,6 +4,9 @@ export async function handler(event, context) {
 
   const response = {
     statusCode: 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
     "body": JSON.stringify("Hello, world!")
   };
   return response;
