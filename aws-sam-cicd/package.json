@@ -8,12 +8,20 @@
     "bundle:functions": "cd build/functions/ && zip ../functions.zip *.mjs",
     "bundle:iac": "cp -r aws-iac build/",
     "prerelease": "npm run clean",
-    "release": "npm run build && npm run bundle:functions && npm run bundle:iac"
+    "release": "npm run build && npm run bundle:functions && npm run bundle:iac",
+    "prestart:api": "npm run release",
+    "start:api": "sam local start-api -t build/aws-iac/sam_template.yaml",
+    "cy:run": "cypress run",
+    "cy:watch": "cypress open"
   },
-  "keywords": ["aws sam", "aws cdk"],
+  "keywords": [
+    "aws sam",
+    "aws cdk"
+  ],
   "author": "Lambros Petrou",
   "license": "ISC",
   "devDependencies": {
+    "cypress": "^9.2.1",
     "esbuild": "^0.14.11"
   }
 }
