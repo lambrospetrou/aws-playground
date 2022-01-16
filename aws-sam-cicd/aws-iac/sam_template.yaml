@@ -20,6 +20,9 @@ Resources:
         # https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-property-function-httpapi.html
         HelloWorld:
           Type: HttpApi
+          Properties:
+            RouteSettings:
+              DetailedMetricsEnabled: true
 
 Outputs:
   # ServerlessHttpApi is an implicit API created out of Events key under Serverless::Function
