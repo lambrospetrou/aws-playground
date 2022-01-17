@@ -5,4 +5,7 @@ version: 0.2
 phases:
   build:
     commands:
-      - sam deploy -t aws-iac/sam_template.yaml --stack-name "HelloWorldApiStack-${DEPLOY_STAGE:-dev}" --resolve-s3 --no-confirm-changeset --no-fail-on-empty-changeset --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND
+      # AWS_REGION is the default region the build is running.
+      # DEPLOY_STAGE and DEPLOY_REGION are our custom variables to denote where we deploy.
+      # https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-env-vars.html
+      - sam deploy -t aws-iac/sam_template.yaml --stack-name "HelloWorldApiStack-${DEPLOY_STAGE:-dev}" --region "${DEPLOY_REGION:-$AWS_REGION}" --resolve-s3 --no-confirm-changeset --no-fail-on-empty-changeset --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND
