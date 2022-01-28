@@ -1,134 +1,88 @@
 package main
 
 import (
-	"database/sql"
+	"context"
 	"fmt"
-	"html"
 	"log"
-	"math/rand"
 	"net/http"
 	"os"
-	"strconv"
-	"time"
 
-	_ "modernc.org/sqlite"
+	"zombiezen.com/go/sqlite"
+	"zombiezen.com/go/sqlite/sqlitex"
 )
 
-func createTable(db *sql.DB) {
-	sqlStmt := `
-	create table if not exists users (name TEXT, age INTEGER);
-	--delete from users;
-	`
-	_, err := db.Exec(sqlStmt)
-	if err != nil {
-		log.Fatalf("%q: %s\n", err, sqlStmt)
-	}
-}
+var dbpool *sqlitex.Pool
 
-func transactionInserts(db *sql.DB, num int) {
-	tx, err := db.Begin()
-	if err != nil {
-		log.Fatal(err)
-	}
-	stmt, err := tx.Prepare("INSERT INTO users (name, age) VALUES (?, ?)")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer stmt.Close()
-	for i := 0; i < num; i++ {
-		var suffix string
-		if rand.Float64() >= 0.6 {
-			suffix = "Lambros"
-		} else {
-			suffix = fmt.Sprintf("Lambros-%03d", i)
-		}
-		_, err = stmt.Exec(suffix, i)
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-	tx.Commit()
-	log.Printf("finished inserting %d users", num)
-}
-
-func queryAll(db *sql.DB) {
-	rows, err := db.Query("SELECT * FROM users WHERE name LIKE ?", "Lambros-%")
-	if err != nil {
-		log.Fatal(err)
-	}
-	n := 0
-	for rows.Next() {
-		n++
-	}
-	log.Printf("finished fetching %d rows", n)
-
-	rows, err = db.Query("SELECT count(*) FROM users")
-	if err != nil {
-		log.Fatal(err)
-	}
-	rows.Next()
-	cnt := 0
-	if err = rows.Scan(&cnt); err != nil {
-		log.Fatal(err)
-	}
-	log.Println("all rows:", cnt)
-}
-
-func timeIt(prefix string, f func()) time.Duration {
-	start := time.Now()
-	f()
-	timeElapsed := time.Since(start)
-	log.Println("Time elapsed in", prefix, "is:", timeElapsed)
-	return timeElapsed
-}
-
-func handleRequest(db *sql.DB) time.Duration {
-	var err error
-	var numInserts = 100
-	numInsertsStr := os.Getenv("NUM_INSERTS")
-	if numInsertsStr != "" {
-		numInserts, err = strconv.Atoi(numInsertsStr)
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-
-	totalDuration := timeIt("main()", func() {
-		// createTable(db)
-		timeIt("inserts", func() {
-			transactionInserts(db, numInserts)
-		})
-		timeIt("query", func() {
-			queryAll(db)
-		})
-	})
-	return totalDuration
-}
-
+// Using a Pool to execute SQL in a concurrent HTTP handler.
 func main() {
+	port := os.Getenv("PORT")
+	if len(port) == 0 {
+		port = "5000"
+	}
 	dbPath := os.Getenv("SQLITE_PATH")
 	if dbPath == "" {
 		dbPath = "./users.db"
 	}
 
-	// os.Remove(dbPath)
-	db, err := sql.Open("sqlite", dbPath)
+	var err error
+	dbpool, err = sqlitex.Open(dbPath, 0, 10)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer db.Close()
-	createTable(db)
+	createTable()
 
-	port := os.Getenv("PORT")
-	if len(port) == 0 {
-		port = "5000"
+	log.Printf("Started the server at " + port)
+
+	http.HandleFunc("/", handle)
+	log.Fatal(http.ListenAndServe(":"+port, nil))
+}
+
+func handle(w http.ResponseWriter, r *http.Request) {
+	conn := dbpool.Get(r.Context())
+	if conn == nil {
+		fmt.Fprintln(w, "No connection available...")
+		return
+	}
+	defer dbpool.Put(conn)
+
+	log.Println("selecting from db...")
+
+	err := sqlitex.Execute(conn, "SELECT * FROM users;", &sqlitex.ExecOptions{
+		ResultFunc: func(stmt *sqlite.Stmt) error {
+			fmt.Fprintln(w, stmt.ColumnText(0))
+			return nil
+		},
+	})
+	if err != nil {
+		log.Println(err)
+	}
+}
+
+func createTable() {
+	conn := dbpool.Get(context.Background())
+	if conn == nil {
+		log.Fatalln("No connection available...")
+		return
+	}
+	defer dbpool.Put(conn)
+
+	sqlStmt := `create table if not exists users (name TEXT, age INTEGER);`
+	if err := sqlitex.Execute(conn, sqlStmt, nil); err != nil {
+		log.Fatalln("Could not create initial table!")
 	}
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		totalDuration := handleRequest(db)
-		fmt.Fprintf(w, "Service SQLite Path - queries done - ms[%d]!, %q", totalDuration.Milliseconds(), html.EscapeString(r.URL.Path))
-	})
+	sqlInsertStmt := `INSERT INTO users (name, age) VALUES ('lambros', 30);`
+	if err := sqlitex.Execute(conn, sqlInsertStmt, nil); err != nil {
+		log.Fatalln("Could not insert initial rows!")
+	}
 
-	log.Println("Web Service SQLite starts listening at :" + port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	err := sqlitex.Execute(conn, "SELECT * FROM users;", &sqlitex.ExecOptions{
+		ResultFunc: func(stmt *sqlite.Stmt) error {
+			log.Println(stmt.ColumnText(0))
+			return nil
+		},
+	})
+	if err != nil {
+		log.Println(err)
+	}
 }

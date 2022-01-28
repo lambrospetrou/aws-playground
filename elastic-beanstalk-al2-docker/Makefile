@@ -1,7 +1,13 @@
 .PHONY: bundle
 
 bundle: prepare_output_dir web1 web-sqlite
-	cp -rf .platform .ebextensions docker-compose.yml build/
+	cp -rf .platform .ebextensions build/
+	cp docker-compose.prod.yml build/docker-compose.yml
+	cd build; zip -r bundle.zip .
+
+dev: prepare_output_dir web1 web-sqlite
+	cp -rf .platform .ebextensions build/
+	cp docker-compose.dev.yml build/docker-compose.yml
 	cd build; zip -r bundle.zip .
 
 prepare_output_dir:
