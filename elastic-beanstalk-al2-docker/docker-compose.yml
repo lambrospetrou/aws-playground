@@ -1,17 +1,10 @@
 version: "3.9"
 services:
-  # web-1:
-  #   build:
-  #     # Assumes it will be copied in the build/ directory alongside the Dockerfiles.
-  #     context: ./
-  #     dockerfile: Dockerfile.web1
-  #   ports:
-  #     - "10000:5000"
-  web-sqlite:
+  app:
     build:
       # Assumes it will be copied in the build/ directory alongside the Dockerfiles.
       context: ./
-      dockerfile: Dockerfile.web-sqlite
+      dockerfile: Dockerfile
     ports:
       # There is no proxy in Docker platform so expose the right ports!
       - "80:5000"
