@@ -1,2 +1,2 @@
-web: bin/web-service-1
-web2: bin/web-service-2
+web: bin/app -name app1
+web2: bin/app -name app2 -port 5001

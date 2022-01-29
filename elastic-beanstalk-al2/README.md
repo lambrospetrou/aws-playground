@@ -19,7 +19,7 @@ Assume there are 3 applications we want to run on each Elastic Beanstalk instanc
     * Agent config: https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/AgentReference.html
   + Files logged by default: `/var/log/eb-engine.log, /var/log/eb-hooks.log, /var/log/web.stdout.log, /var/log/nginx/access.log, /var/log/nginx/error.log`
   + All processes from `Procfile` will have `/var/log/<name>.{stdout,stderr}.log` according to https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/platforms-linux-extend.html.
-  + Need to setup the right permissions as well:
+  + Need to setup the right permissions as well for the EC2 instance role (not the service role):
   ```
   2022-01-25 02:00:28,575 - cwlogs.push.batch - INFO - 6113 - Thread-2 - Creating log group /aws/elasticbeanstalk/Test2-al2-env//var/log/web2.stdout.log.
   2022-01-25 02:00:28,597 - cwlogs.push.batch - WARNING - 6113 - Thread-2 - CreateLogGroup failed with exception An error occurred (AccessDeniedException) when calling the CreateLogGroup operation: User: arn:aws:sts::717437904155:assumed-role/aws-elasticbeanstalk-ec2-role/i-08e1b0e2204017ae2 is not authorized to perform: logs:CreateLogGroup on resource: arn:aws:logs:eu-west-1:717437904155:log-group:/aws/elasticbeanstalk/Test2-al2-env//var/log/web2.stdout.log:log-stream: because no identity-based policy allows the logs:CreateLogGroup action
