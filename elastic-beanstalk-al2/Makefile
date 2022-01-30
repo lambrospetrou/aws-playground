@@ -2,8 +2,9 @@
 
 bundle: prepare_output_dir app
 	mv app/app build/bin/
+	cp build-tools/goreman build/bin/goreman
 	cp build-tools/hello.sh build/bin/
-	cp -rf .platform .ebextensions Buildfile Procfile build/
+	cp -rf .platform .ebextensions Buildfile Procfile Procfile-app build/
 	cd build; zip -r bundle.zip .
 
 prepare_output_dir:

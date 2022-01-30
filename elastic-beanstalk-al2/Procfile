@@ -1,2 +1,1 @@
-web: bin/app -name app1
-web2: bin/app -name app2 -port 5001
+web: ./bin/goreman -f Procfile-app start
