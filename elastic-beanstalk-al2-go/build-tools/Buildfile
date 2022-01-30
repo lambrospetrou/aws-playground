@@ -1,0 +1,1 @@
+command_to_run_during_build: bin/build-hello.sh
