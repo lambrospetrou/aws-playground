@@ -1,4 +1,4 @@
-package lib
+package main
 
 import (
 	"com.lambrospetrou/aws-playground/aws-lambda-url-and-fly-golang-proxy/core"
