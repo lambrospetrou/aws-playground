@@ -1,0 +1,26 @@
+# fly.toml file generated for still-night-1355 on 2022-10-10T21:49:51+01:00
+
+app = "USE-YOUR-OWN-APP"
+kill_signal = "SIGINT"
+kill_timeout = 5
+
+[[services]]
+  internal_port = 5000
+  protocol = "tcp"
+  [services.concurrency]
+    hard_limit = 200
+    soft_limit = 150
+
+  [[services.ports]]
+    handlers = ["http"]
+    port = 80
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
+
+  [[services.tcp_checks]]
+    grace_period = "1s"
+    interval = "5s"
+    restart_limit = 0
+    timeout = "2s"
