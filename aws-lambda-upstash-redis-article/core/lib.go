@@ -68,7 +68,12 @@ func login(w http.ResponseWriter, r *http.Request) {
 
 	sessionId := ksuid.New()
 	redisDb.Set(r.Context(), "session:"+sessionId.String(), userId, time.Hour*1)
-	http.SetCookie(w, &http.Cookie{Name: COOKIE_AUTH_NAME, Value: sessionId.String()})
+	http.SetCookie(w, &http.Cookie{
+		Name: COOKIE_AUTH_NAME, Value: sessionId.String(),
+		Path: "/", MaxAge: int((time.Hour * 1).Seconds()),
+		// This should be true when deploying in production (https), but locally we need it false (http).
+		Secure: false,
+	})
 
 	http.Redirect(w, r, "/lessons/completed", http.StatusTemporaryRedirect)
 }
