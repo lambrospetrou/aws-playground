@@ -17,6 +17,7 @@ In a proper production deployment we should have separate deployment folders to 
 - http://0pointer.de/blog/projects/socket-activation.html
 - https://vincent.bernat.ch/en/blog/2018-systemd-golang-socket-activation
 - https://github.com/coreos/go-systemd/blob/master/examples/activation/httpserver/httpserver.go
+- https://mgdm.net/weblog/systemd/
 
 ## Try it
 
